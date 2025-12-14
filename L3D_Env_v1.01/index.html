@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>L3D_Environment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: sans-serif;
+    }
+
+    /* 放射式漸層背景，中心在右上角 */
+    #background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(
+        circle at 80% -50%,
+        #883cbe 0%,
+        #312668 50%,
+        #1e0f45 100%
+      );
+      z-index: 0;
+    }
+
+    /* 圖片置中 */
+    #center-image-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw;
+      pointer-events: none;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 圖片高度依照視窗縮放 */
+    #loading-image {
+      height: 80vh;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      opacity: 0.1; /* ⭐ 初始透明度 */
+      transition: opacity 0.2s linear;
+    }
+
+    /* 字 + Bar — 置於畫面正中央 */
+    #caption-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    #loading-text {
+      color: #FFF;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-shadow: 0 0 8px #000;
+    }
+
+    /* 加粗 loading bar 背景 */
+    #loading-container {
+      width: 80%;
+      margin: auto;
+      height: 16px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    /* 漸層亮藍 → 粉紫 */
+    #loading-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(to right, #415ff8, #c761d6);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    #container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="background"></div>
+
+  <div id="center-image-wrapper">
+    <img id="loading-image" src="thumbnail.png" alt="Loading Image">
+  </div>
+
+  <div id="caption-wrapper">
+    <div id="loading-text">Loading</div>
+    <div id="loading-container">
+      <div id="loading-bar"></div>
+    </div>
+  </div>
+
+  <div id="container">
+    <canvas id="game-canvas" data-pixel-art=""></canvas>
+    <script src="Build/L3D_Env_v1.01.loader.js"></script>
+
+    <script>
+      /* ⭐ Unity progress + 控制圖片透明度 */
+      function progressHandler(progress) {
+
+        /* 更新 loading bar */
+        document.getElementById('loading-bar').style.width = (progress * 100) + '%';
+
+        /* ⭐更新圖片透明度：0.1 → 0.3 */
+        const img = document.getElementById('loading-image');
+        const opacity = 0.0 + progress * 0.2;
+        img.style.opacity = opacity;
+      }
+
+      var canvas = document.querySelector("#game-canvas");
+
+      function onResize() {
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+      }
+
+      createUnityInstance(canvas, {
+        dataUrl: "Build/L3D_Env_v1.01.data",
+        frameworkUrl: "Build/L3D_Env_v1.01.framework.js",
+        codeUrl: "Build/L3D_Env_v1.01.wasm",
+      }, progressHandler).then(function (instance) {
+        canvas = instance.Module.canvas;
+        document.getElementById('background').style.display = 'none';
+        document.getElementById('center-image-wrapper').style.display = 'none';
+        document.getElementById('caption-wrapper').style.display = 'none';
+        onResize();
+      });
+
+      window.addEventListener('resize', onResize);
+      onResize();
+    </script>
+  </div>
+
+</body>
+</html>
