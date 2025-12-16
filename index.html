@@ -111,7 +111,44 @@
       display: block;
     }
   </style>
+</head><head>
+  <meta charset="utf-8">
+  <title>L3D_Environment</title>
+
+  <!-- Browser Tab Icon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: sans-serif;
+    }
+
+    /* 放射式漸層背景，中心在右上角 */
+    #background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(
+        circle at 80% -50%,
+        #883cbe 0%,
+        #312668 50%,
+        #1e0f45 100%
+      );
+      z-index: 0;
+    }
+  </style>
 </head>
+
 
 <body>
   <div id="background"></div>
