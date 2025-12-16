@@ -129,7 +129,7 @@
 
   <div id="container">
     <canvas id="game-canvas" data-pixel-art=""></canvas>
-    <script src="Build/L3D_Env_v1.01.loader.js"></script>
+    <script src="Build/L3D_Env_v1.02.loader.js"></script>
 
     <script>
       /* ⭐ Unity progress + 控制圖片透明度 */
@@ -152,9 +152,9 @@
       }
 
       createUnityInstance(canvas, {
-        dataUrl: "Build/L3D_Env_v1.01.data.unityweb",
-        frameworkUrl: "Build/L3D_Env_v1.01.framework.js.unityweb",
-        codeUrl: "Build/L3D_Env_v1.01.wasm.unityweb",
+        dataUrl: "Build/L3D_Env_v1.02.data.unityweb",
+        frameworkUrl: "Build/L3D_Env_v1.02.framework.js.unityweb",
+        codeUrl: "Build/L3D_Env_v1.02.wasm.unityweb",
       }, progressHandler).then(function (instance) {
         canvas = instance.Module.canvas;
         document.getElementById('background').style.display = 'none';
